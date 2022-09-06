@@ -255,6 +255,7 @@ jobs:
             npm install
             npm run migrations > migrations_dump.txt
             cat migrations_dump.txt
+            cat /home/circleci/.npm/_logs/2022-09-06T12_43_26_289Z-debug.log
       - run:
           name: Send migration results to memstash
           command: |
