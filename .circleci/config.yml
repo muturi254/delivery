@@ -454,10 +454,7 @@ jobs:
           command: |
             # your code here
             yum install tar gzip -y
-      - persist_to_workspace:
-          root: ~/
-          paths:
-            - projects/OldWorkflowID.txt
+
       - run:
           name: Get old workflow ID
           command: |
@@ -465,6 +462,11 @@ jobs:
               aws cloudformation list-exports --query "Exports[?Name==\`workflowID\`].Value" --no-paginate --output-text | grep - o [^-]*$)
             echo $OldWorkflowID >> ~/projects/OldWorkflowID.txt
             cat ~/projects/OldWorkflowID.txt
+            
+      - persist_to_workspace:
+          root: ~/
+          paths:
+            - project/OldWorkflowID.txt
             
       - run:
           name: Update cloudfront distribution
