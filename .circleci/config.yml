@@ -63,8 +63,8 @@ jobs:
           command: |
             # Your code here
             cd frontend
-            # npm install
-            # npm run build
+            npm install
+            npm run build
       - save_cache:
           paths: [frontend/node_modules]
           key: frontend-build
@@ -81,8 +81,8 @@ jobs:
           command: |
              # Your code here
               cd backend
-              # npm install --legacy-peer-deps
-              # npm run build
+              npm install --legacy-peer-deps
+              npm run build
       - save_cache:
           paths: [backend/node_modules]
           key: backend-build
@@ -103,8 +103,8 @@ jobs:
           command: |
             # Your code here
               cd frontend
-              # npm install
-              # npm run test
+              npm install
+              npm run test
                   
   test-backend:
     docker:
@@ -122,8 +122,8 @@ jobs:
           command: |
              # Your code here
               cd backend
-              # npm install
-              # npm run test
+              npm install
+              npm run test
             
   scan-frontend:
     docker:
@@ -176,11 +176,11 @@ jobs:
       - run:
           name: Ensure back-end infrastructure exists
           command: |
-            # aws cloudformation deploy \
-            # --template-file .circleci/files/backend.yml \
-            # --stack-name "udapeople-backend-${CIRCLE_WORKFLOW_ID:0:7}" \
-            # --parameter-overrides ID="${CIRCLE_WORKFLOW_ID:0:7}"  \
-            # --tags project=udapeople
+            aws cloudformation deploy \
+            --template-file .circleci/files/backend.yml \
+            --stack-name "udapeople-backend-${CIRCLE_WORKFLOW_ID:0:7}" \
+            --parameter-overrides ID="${CIRCLE_WORKFLOW_ID:0:7}"  \
+            --tags project=udapeople
 
             echo "hello"
       - run:
@@ -199,10 +199,10 @@ jobs:
           name: Add back-end ip to ansible inventory
           command: |
             # Your code here
-            # aws ec2 describe-instances \
-            # --query 'Reservations[*].Instances[*].[PublicIpAddress]' \
-            # --filters "Name=tag:Name,Values=backend-${CIRCLE_WORKFLOW_ID:0:7}" \
-            # --output text >> ~/project/.circleci/ansible/inventory.txt
+            aws ec2 describe-instances \
+            --query 'Reservations[*].Instances[*].[PublicIpAddress]' \
+            --filters "Name=tag:Name,Values=backend-${CIRCLE_WORKFLOW_ID:0:7}" \
+            --output text >> ~/project/.circleci/ansible/inventory.txt
             echo "done"
             cat ~/project/.circleci/ansible/inventory.txt  
       # Here's where you will add some code to rollback on failure  
@@ -529,8 +529,8 @@ workflows:
       - scan-frontend:
           requires: [build-frontend]
       - deploy-infrastructure:
-          # requires: [test-frontend, test-backend, scan-frontend, scan-backend]
-          requires: [test-frontend]
+          requires: [test-frontend, test-backend, scan-frontend, scan-backend]
+          # requires: [test-frontend]
           filters:
             branches:
               only: [main]
@@ -543,11 +543,11 @@ workflows:
       - deploy-backend:
           requires: [run-migrations]
       - smoke-test:
-          # requires: [deploy-backend, deploy-frontend]
-          requires: [build-backend]
+          requires: [deploy-backend, deploy-frontend]
+          # requires: [build-backend]
       - cloudfront-update:
-          # requires: [smoke-test]
-          requires: [build-frontend]
+          requires: [smoke-test]
+          # requires: [build-frontend]
       - cleanup:
           requires: [cloudfront-update]
 
