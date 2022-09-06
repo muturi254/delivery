@@ -14,8 +14,8 @@ commands:
           when: on_fail
           command: |
             # Your code here
-            aws cloudformation delete-stack --stack-name "udapeople-frontend-$(workflow_id)"
-            aws cloudformation delete-stack --stack-name "udapeople-backend-$(workflow_id)"
+            aws cloudformation delete-stack --stack-name "udapeople-frontend-<<parameters.workflow_id>>"
+            aws cloudformation delete-stack --stack-name "udapeople-backend-<<parameters.workflow_id>>"
 
   # revert-migrations:
   #   description: Revert the last migration if successfully run in the current workflow.
@@ -155,9 +155,11 @@ jobs:
     docker:
       # Docker image here that supports AWS CLI
       - image: amazon/aws-cli
+      - image: 
     steps:
       # Checkout code from git
       - checkout
+      - run: yum install tar gzip -y
       - run:
           name: Ensure back-end infrastructure exists
           command: |
