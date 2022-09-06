@@ -454,6 +454,10 @@ jobs:
           command: |
             # your code here
             yum install tar gzip --query
+      - persist_to_workspace:
+          root: ~/
+          paths:
+            - project/OldWorkflowID.txt
       - run:
           name: Get old workflow ID
           command: |
@@ -462,10 +466,6 @@ jobs:
             echo $OldWorkflowID >> ~/project/OldWorkflowID.txt
             cat ~/project/OldWorkflowID.txt
             
-      - persist_to_workspace:
-          root: ~/
-          paths:
-            - ~/project/OldWorkflowID.txt
       - run:
           name: Update cloudfront distribution
           command: |
