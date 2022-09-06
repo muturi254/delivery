@@ -21,13 +21,17 @@ commands:
   #   description: Revert the last migration if successfully run in the current workflow.
   #   parameters:
   #     # Add parameter here     
+  #     workflow_id:
+  #       type: string
+  #       default: ${WORKFLOW_ID:0:7}
   #   steps:
   #     - run:
   #         name: Revert migrations
   #         # Add when this will run
+  #         when: on_fail
   #         command: |
   #           # Curl command here to see if there was a successful migration associated with the workflow id, store result in SUCCESS variable
-
+  #           curl
   #           SUCCESS = 1
   #           if(( $SUCCESS==1 )); 
   #           then
@@ -228,22 +232,35 @@ jobs:
       - destroy-environment:
           workflow_id: ${CIRCLE_WORKFLOW_ID:0:7}
 
-#   run-migrations:
-#     docker:
-#       # Docker image here that supports NodeJS
-#     steps:
-#       # Checkout code from git
-#       - run:
-#           name: Run migrations
-#           command: |
-#             # Your code here
-#             exit 1
-#       - run:
-#           name: Send migration results to memstash
-#           command: |
-#             # Your code here
-#             exit 1
-#      # Here's where you will add some code to rollback on failure      
+  run-migrations:
+    docker:
+      # Docker image here that supports NodeJS
+      - image: circleci/node:13.8.0
+    steps:
+      # Checkout code from git
+      - checkout
+      - restore_cache:
+          keys: [backend-build]
+
+      - run:
+          name: Run migrations
+          command: |
+            # Your code here
+            cd backend
+            npm install
+            npm run migrations > migrations_dump.txt
+            cat migrations_dump.txt
+      - run:
+          name: Send migration results to memstash
+          command: |
+            # Your code here
+            if grep -q "has been executed successfully." ~/project/backend/migrations_dump.txt
+            then
+                curl --insecure https://kvdb.io/9GE4jRtKznmVKRfvdBABBe/migration_${CIRCLE_WORKFLOW_ID:0:7}  -d '1'
+            fi
+     # Here's where you will add some code to rollback on failure      
+      - destroy-environment:
+          workflow_id: ${WORKFLOW_ID:0:7}
 
 #   deploy-frontend:
 #     docker:
@@ -361,8 +378,9 @@ workflows:
               only: [main]
       - configure-infrastructure:
           requires: [deploy-infrastructure]
-      # - run-migrations:
-      #     requires: [configure-infrastructure]
+      - run-migrations:
+          # requires: [configure-infrastructure]
+          requires: [build-backend]
       # - deploy-frontend:
       #     requires: [run-migrations]
       # - deploy-backend:
