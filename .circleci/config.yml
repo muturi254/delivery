@@ -32,7 +32,7 @@ commands:
           when: on_fail
           command: |
             # Curl command here to see if there was a successful migration associated with the workflow id, store result in SUCCESS variable
-            SUCCESS=$(curl --insecure  https://kvdb.io/9GE4jRtKznmVKRfvdBABBe/migration_<< parameters.workflow_id >> )
+            export SUCCESS=$(curl --insecure  https://kvdb.io/9GE4jRtKznmVKRfvdBABBe/migration_<< parameters.workflow_id >> )
             SUCCESS = 1
             if (($SUCCESS==1)); 
             then
@@ -433,20 +433,37 @@ jobs:
           workflow_id: ${CIRCLE_WORKFLOW_ID:0:7}  
 
 
-#   cloudfront-update:
-#     docker:
-#       # Docker image here that supports AWS CLI
-#     steps:
-#       # Checkout code from git
-#       - run:
-#           name: Install dependencies
-#           command: |
-#             # your code here
-#       - run:
-#           name: Update cloudfront distribution
-#           command: |
-#             # your code here
-#       # Here's where you will add some code to rollback on failure  
+  cloudfront-update:
+    docker:
+      # Docker image here that supports AWS CLI
+      - image: amazon/aws-cli
+    steps:
+      # Checkout code from git
+      - checkout
+      - run:
+          name: Install dependencies
+          command: |
+            # your code here
+            yum install tar gzip --query
+      - run:
+          name: Get old workflow ID
+          command: |
+            export OldWorkflowID=$(
+              aws cloudformation list-exports --query "Exports[?Name==\`workflowID\`].Value" --no-paginate --output-text | grep - o [^-]*$)
+            echo $OldWorkflowID >> ~/project/OldWorkflowID.txt
+            cat ~/project/OldWorkflowID.txt
+            
+      - persist_to_workspace:
+          root: ~/
+          paths:
+            - ~/project/OldWorkflowID.txt
+      - run:
+          name: Update cloudfront distribution
+          command: |
+            # your code here
+            aws cloudformation deploy --template-file .circleci/files/cloudfront.yml --stack-name initialStack --parameter-overrides workflowID="udapeople-${CIRCLE_WORKFLOW_ID:0:7}"" --tags project=udapeople
+            echo OldWorkflowID: $(cat ~/project/OldWorkflowID.txt)
+            echo currentWorkflowID: "${CIRCLE_WORKFLOW_ID:0:7}"
 
 # cleanup:
 #     docker:
