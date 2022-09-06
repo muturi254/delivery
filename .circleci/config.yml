@@ -146,9 +146,9 @@ jobs:
           command: |
              # Your code here
               cd backend
-              npm install --legacy-peer-deps
-              npm audit fix --audit-level=critical --force
-              npm audit --audit-level=critical
+              # npm install --legacy-peer-deps
+              # npm audit fix --audit-level=critical --force
+              # npm audit --audit-level=critical
   
 
   deploy-infrastructure:
