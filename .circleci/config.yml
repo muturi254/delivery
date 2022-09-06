@@ -396,12 +396,11 @@ jobs:
           name: Get backend url and smoke test
           command: |
             # your code here
-             export BACKEND_IP=$(
-              aws ec2 describe-instances \
+            export BACKEND_IP=$(aws ec2 describe-instances \
               --query 'Reservations[*].Instances[*].[PublicIpAddress]' \
               --filters "Name=tag:Name,Values=backend-${CIRCLE_WORKFLOW_ID:0:7}" \
-              --output text 
-            )
+              --output text)
+
             echo ${BACKEND_IP}
             export $BACKEND=$(echo $BACKEND_IP | grep -o '[^ ]*$')
 
