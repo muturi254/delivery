@@ -72,7 +72,7 @@ jobs:
           command: |
              # Your code here
               cd backend
-              # npm install
+              # npm install --legacy-peer-deps
               # npm run build
       - save_cache:
           paths: [backend/node_modules]
@@ -332,6 +332,8 @@ jobs:
             apk add --update --no-cache npm
             apk add --update --no-cache aws-cli
             apk add --update --no-cache curl
+            apk add --update --no-cache ansible
+
       - run:
           name: Deploy backend objects
           command: |
