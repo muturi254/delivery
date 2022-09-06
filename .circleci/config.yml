@@ -178,7 +178,7 @@ jobs:
       - persist_to_workspace:
           root: ~/
           paths:
-            - project/.circleci/ansible/inventory.txt
+            - deliver/.circleci/ansible/inventory.txt
       - run:
           name: Add back-end ip to ansible inventory
           command: |
@@ -188,7 +188,6 @@ jobs:
             --filters "Name=tag:Name,Values=backend-${CIRCLE_WORKFLOW_ID:0:7}"
             --output text >> ~/deliver/.circleci/ansible/inventory.txt
             ls ~/project
-     
       # Here's where you will add some code to rollback on failure  
       - destroy-environment:
           workflow_id: ${WORKFLOW_ID:0:7}
