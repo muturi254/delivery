@@ -14,7 +14,7 @@ commands:
           when: on_fail
           command: |
             # Your code here
-            aws cloudformation delete-stack --stack-name ${workflow_id}
+            aws cloudformation delete-stack --stack-name "${workflow_id}"
 
   # revert-migrations:
   #   description: Revert the last migration if successfully run in the current workflow.
