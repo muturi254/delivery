@@ -291,12 +291,10 @@ jobs:
           name: Get backend url
           command: |
             # your code here
-            export BACKEND_IP=$(
-              aws ec2 describe-instances \
+            export BACKEND_IP=$(aws ec2 describe-instances \
               --query 'Reservations[*].Instances[*].[PublicIpAddress]' \
               --filters "Name=tag:Name,Values=backend-${CIRCLE_WORKFLOW_ID:0:7}" \
-              --output text
-            ) 
+              --output text) 
 
             export API_URL="http://${BACKEND_IP}:3030"
             echo "${API_URL}"
@@ -315,22 +313,59 @@ jobs:
       - destroy-environment:
           workflow_id: ${CIRCLE_WORKFLOW_ID:0:7}       
                     
-#   deploy-backend:
-#     docker:
-#       # Docker image here that supports Ansible
-#     steps:
-#       # Checkout code from git
-#       # Add ssh keys with fingerprint
-#       # attach workspace
-#       - run:
-#           name: Install dependencies
-#           command: |
-#             # your code here
-#       - run:
-#           name: Deploy backend
-#           command: |
-#             # your code here
-#       # Here's where you will add some code to rollback on failure  
+  deploy-backend:
+   docker:
+      # Docker image here that supports AWS CLI
+      - image: python:3.10-alpine3.16
+    steps:
+      # Checkout code from git
+      - checkout
+      - attach_workspace:
+          at: ~/
+      - run:
+          name: Install dependencies
+          command: |
+            # your code here
+            apk add --update --no-cache tar
+            apk add --update --no-cache gzip
+            apk add --update --no-cache nodejs
+            apk add --update --no-cache npm
+            apk add --update --no-cache aws-cli
+            apk add --update --no-cache curl
+      - run:
+          name: Deploy backend objects
+          command: |
+            # your code here
+            pwd
+            cd backend
+            
+            touch .env
+            echo ENVIRONMENT=production > ".env"
+            echo TYPEORM_CONNECTION=postgres > ".env"
+            echo TYPEORM_ENTITIES=./src/modules/domain/**/*.entity.ts > ".env"
+            echo TYPEORM_MIGRATIONS=./src/migartions/*.ts > ".env"
+            echo TYPEORM_MIGRATIONS_DIR=./src/migartions > ".env"
+            echo TYPEORM_HOST=postgres > ".env"
+            echo TYPEORM_USERNAME=$TYPEORM_USERNAME > ".env"
+            echo TYPEORM_PASSWORD=$TYPEORM_PASSWOR > ".env"
+            echo NODE_ENV=production >> ".env"
+            echo TYPEORM_DATABASE=$TYPEORM_DATABASE > ".env"
+
+            pwd
+            ls -al
+            npm i
+            npm run build
+            cd ..
+            ls
+            # Zip the directory
+            tar -C backend -czvf artifact.tar.gz .
+            cd .circleci/ansible
+            echo "Contents  of the inventory.txt file is -------"
+            cat inventory.txt
+            ansible-playbook -i inventory.txt deploy-backend.yml
+      # Here's where you will add some code to rollback on failure    
+      - destroy-environment:
+          workflow_id: ${CIRCLE_WORKFLOW_ID:0:7}  
 
 #   smoke-test:
 #     docker:
