@@ -146,10 +146,9 @@ jobs:
           command: |
              # Your code here
               cd backend
-              # npm install --legacy-peer-deps
+              npm install
               # npm audit fix --audit-level=critical --force
-              # npm audit --audit-level=critical
-  
+              
 
   deploy-infrastructure:
     docker:
