@@ -80,8 +80,8 @@ jobs:
           name: Back-end build
           command: |
              # Your code here
-              cd backend
-              npm install --legacy-peer-deps
+              cd frontend
+              npm install
               npm run build
       - save_cache:
           paths: [backend/node_modules]
