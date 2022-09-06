@@ -235,7 +235,7 @@ jobs:
   run-migrations:
     docker:
       # Docker image here that supports NodeJS
-      - image: circleci/node:12.13.1
+      - image: circleci/node:13.8.0
       # - image: python:3.10-alpine3.16
     steps:
       # Checkout code from git
