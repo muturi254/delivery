@@ -208,13 +208,13 @@ jobs:
       - checkout
       - add_ssh_keys:
           fingerprints:
-            - "64:54:1e:e9:de:d2:74:00:f5:e2:14:42:ba:61:70:76"
+            - "4f:39:11:0c:ee:3e:66:f7:2f:49:28:f8:25:12:33:53"
       - attach_workspace:
           at: ~/
       - run:
           name: Install dependencies
           command: |
-            apk add --update  --no-cache ansible tar gzip aws cli openssh
+            apk add --update  --no-cache ansible tar gzip aws-cli openssh
       - run:
           name: Configure server
           command: |
