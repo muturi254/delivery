@@ -471,7 +471,7 @@ cleanup:
       - run:
           name: install dependancies
           command: |
-            yum nstall tar gzip -y
+            yum install tar gzip -y
       - attach_workspace:
           at: ~/
       
