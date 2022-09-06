@@ -253,7 +253,7 @@ jobs:
             # Your code here
             cd backend
             sudo npm install -g npm
-            npm install
+            npm install --legacy-peer-deps
             npm run migrations > migrations_dump.txt
             cat migrations_dump.txt
       - run:
