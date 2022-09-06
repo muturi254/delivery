@@ -353,7 +353,7 @@ jobs:
 
             pwd
             ls -al
-            npm i
+            npm i --legacy-peer-deps
             npm run build
             cd ..
             ls
