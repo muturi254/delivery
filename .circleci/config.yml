@@ -453,7 +453,7 @@ jobs:
           name: Install dependencies
           command: |
             # your code here
-            yum install tar gzip --query
+            yum install tar gzip -y
       - persist_to_workspace:
           root: ~/
           paths:
