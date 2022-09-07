@@ -10,7 +10,7 @@ Parameters:
 Resources:
   
   CloudFrontOriginAccessIdentity1:
-    Type: "sWS::CloudFront::CloudFrontOriginAccessIdentity"
+    Type: "AWS::CloudFront::CloudFrontOriginAccessIdentity"
     Properties:
       CloudFrontOriginAccessIdentityConfig:
         Comment: Origin Access Identity for Serverless Static Website
