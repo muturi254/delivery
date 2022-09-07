@@ -492,7 +492,7 @@ cleanup:
             then
               # your code here
               echo "Deleting stack"
-              echo "s3://udapeople-${OldWorkflowID}" --recursive || true
+              echo "s3://bucketmuturi254" --recursive || true
               aws cloudformation --delete-stack stack-name "udapeople-backend-${OldWorkflowID}" || true
               aws cloudformation --delete-stack stack-name "udapeople-frontend-${OldWorkflowID}" || true
             else
