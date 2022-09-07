@@ -6,6 +6,7 @@ commands:
     parameters:
       workflow_id:
         type: string
+        default: ${WORKFLOW_ID:0:7}
         
       # Add parameter here   
     steps:
