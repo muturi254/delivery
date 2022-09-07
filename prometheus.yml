@@ -2,7 +2,8 @@
 alerting:
   alertmanagers:
   - static_configs:
-    - targets: ['127.0.0.1:9093']
+    - targets:
+      - localhost:9093
       
 
 # Load rules once and periodically evaluate them according to the global 'evaluation_interval'.
@@ -25,8 +26,8 @@ scrape_configs:
   - job_name: 'node'
     ec2_sd_configs:
     - region: us-east-1
-      access_key: AKIA3KZZ3CA5UTPSQA4X
-      secret_key: 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
+      access_key: AKIAVVAXX265VHIRC3XO
+      secret_key: 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
       port: 9100
 
 
