@@ -29,11 +29,11 @@ route:
 receivers:
 - name: email-me
   email_configs:
-  - to: petermuturi74@gmail.com
-    from: petermuturi1995@gmail.com
+  - to: 'petermuturi1995@gmail.com'
+    from: 'peter.muturi@moringaschool.com'
     smarthost: smtp.gmail.com:587
-    auth_username: petermuturi1995@gmail.com
-    auth_identity: petermuturi1995@gmail.com
-    auth_password: "root@Number12"
+    auth_username: 'petermuturi1995@gmail.com'
+    auth_identity: 'petermuturi1995@gmail.com'
+    auth_password: "vuzfphiebqljtajb"
 
 
