@@ -540,10 +540,8 @@ workflows:
           requires: [run-migrations]
       - smoke-test:
           requires: [deploy-backend, deploy-frontend]
-          # requires: [build-backend]
       - cloudfront-update:
           requires: [smoke-test]
-          # requires: [build-frontend]
       - cleanup:
           requires: [cloudfront-update]
 
